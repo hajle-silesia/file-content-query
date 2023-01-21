@@ -8,6 +8,7 @@ import threading
 import fastapi
 import kafka
 import pymongo
+import requests
 
 
 def load_events():
@@ -41,7 +42,14 @@ events_thread.start()
 async def healthz():
     return {'status': "ok"}
 
-# @app.get("/content")
-# async def content():
-#     return {"content": file_content_processor.content,
-#             }
+
+@app.get("/api/healthz")
+async def healthz():
+    return {'status': "ok"}
+
+
+@app.post("/api/update")
+async def update(request: fastapi.Request):
+    url = "http://file-content-monitor.default.svc.cluster.local/update"
+    response = requests.post(url, await request.body())
+    return response.status_code
