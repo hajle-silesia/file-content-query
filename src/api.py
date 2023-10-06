@@ -32,15 +32,25 @@ def load_events():
         collection.insert_one(record)
 
 
+def get_latest_recipe():
+    mongo_client = pymongo.MongoClient(host="mongodb://file-content.default.svc.cluster.local",
+                                       port=80,
+                                       username=os.getenv('FILE_CONTENT_ROOT_USERNAME'),
+                                       password=os.getenv('FILE_CONTENT_ROOT_PASSWORD'),
+                                       )
+
+    db = mongo_client["file-content"]
+    collection = db["recipes"]
+
+    results = collection.find().sort('_id', pymongo.DESCENDING).limit(1)
+    for result in results:
+        return result
+
+
 app = fastapi.FastAPI()
 
 events_thread = threading.Thread(target=load_events)
 events_thread.start()
-
-
-@app.get("/healthz")
-async def healthz():
-    return {'status': "ok"}
 
 
 @app.get("/api/healthz")
@@ -48,8 +58,14 @@ async def healthz():
     return {'status': "ok"}
 
 
-@app.post("/api/update")
-async def update(request: fastapi.Request):
+@app.post("/api/file-content-monitor/update")
+async def file_content_monitor_update(request: fastapi.Request):
     url = "http://file-content-monitor.default.svc.cluster.local/update"
-    response = requests.post(url, await request.body())
+    response = requests.post(url=url, data=await request.body(), timeout=3)
     return response.status_code
+
+
+@app.get("/api/file-content")
+async def file_content():
+    response = get_latest_recipe()
+    return base64.b64encode(json.dumps(response, default=str).encode())
