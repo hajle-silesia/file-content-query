@@ -60,7 +60,7 @@ async def healthz():
 
 @app.post("/api/file-content-monitor/update")
 async def file_content_monitor_update(request: fastapi.Request):
-    url = "http://file-content-monitor.default.svc.cluster.local/update"
+    url = "http://file-content-monitor-file-content-monitor-config.default.svc.cluster.local/update"
     response = requests.post(url=url, data=await request.body(), timeout=3)
     return response.status_code
 
