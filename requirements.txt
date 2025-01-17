@@ -1,5 +1,5 @@
 fastapi
 uvicorn
-kafka-python
+kafka-python-ng
 pymongo
 requests
