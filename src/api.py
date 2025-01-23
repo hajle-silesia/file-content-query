@@ -69,3 +69,9 @@ async def file_content_monitor_update(request: fastapi.Request):
 async def file_content():
     response = get_latest_recipe()
     return base64.b64encode(json.dumps(response, default=str).encode())
+
+
+@app.get("/api/video-stream")
+async def video_stream():
+    url = "http://srs-server.default.svc.cluster.local:8080/live/livestream.flv"
+    return url
