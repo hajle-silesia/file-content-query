@@ -73,5 +73,9 @@ async def file_content():
 
 @app.get("/api/video-stream")
 async def video_stream():
-    url = "http://srs-server.default.svc.cluster.local:8080/live/livestream.flv"
-    return url
+    response = requests.get(
+        url="http://srs-server.default.svc.cluster.local:8080/live/livestream.flv",
+        stream=True,
+        timeout=3,
+    )
+    return response
