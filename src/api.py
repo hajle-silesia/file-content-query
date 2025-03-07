@@ -17,7 +17,7 @@ def load_events():
                                    )
     consumer.subscribe(topics=["file-content-processor-topic"])
     for event in consumer:
-        mongo_client = pymongo.MongoClient(host="mongodb://file-content-file-content-config.default.svc.cluster.local",
+        mongo_client = pymongo.MongoClient(host="mongodb://file-content-mongodb.default.svc.cluster.local",
                                            port=80,
                                            username=os.getenv('FILE_CONTENT_ROOT_USERNAME'),
                                            password=os.getenv('FILE_CONTENT_ROOT_PASSWORD'),
@@ -33,7 +33,7 @@ def load_events():
 
 
 def get_latest_recipe():
-    mongo_client = pymongo.MongoClient(host="mongodb://file-content-file-content-config.default.svc.cluster.local",
+    mongo_client = pymongo.MongoClient(host="mongodb://file-content-mongodb.default.svc.cluster.local",
                                        port=80,
                                        username=os.getenv('FILE_CONTENT_ROOT_USERNAME'),
                                        password=os.getenv('FILE_CONTENT_ROOT_PASSWORD'),
