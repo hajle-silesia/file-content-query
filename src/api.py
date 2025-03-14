@@ -17,7 +17,7 @@ def load_events():
                                    )
     consumer.subscribe(topics=["file-content-processor-topic"])
     for event in consumer:
-        mongo_client = pymongo.MongoClient(host="mongodb://file-content-mongodb.default.svc.cluster.local",
+        mongo_client = pymongo.MongoClient(host="mongodb://file-content-mongodb.file-content.svc.cluster.local",
                                            port=80,
                                            username=os.getenv('FILE_CONTENT_ROOT_USERNAME'),
                                            password=os.getenv('FILE_CONTENT_ROOT_PASSWORD'),
@@ -33,7 +33,7 @@ def load_events():
 
 
 def get_latest_recipe():
-    mongo_client = pymongo.MongoClient(host="mongodb://file-content-mongodb.default.svc.cluster.local",
+    mongo_client = pymongo.MongoClient(host="mongodb://file-content-mongodb.file-content.svc.cluster.local",
                                        port=80,
                                        username=os.getenv('FILE_CONTENT_ROOT_USERNAME'),
                                        password=os.getenv('FILE_CONTENT_ROOT_PASSWORD'),
@@ -60,7 +60,7 @@ async def healthz():
 
 @app.post("/api/file-content-monitor/update")
 async def file_content_monitor_update(request: fastapi.Request):
-    url = "http://file-content-monitor-file-content-monitor-config.default.svc.cluster.local/update"
+    url = "http://file-content-monitor-file-content-monitor-config.file-content-monitor.svc.cluster.local/update"
     response = requests.post(url=url, data=await request.body(), timeout=3)
     return response.status_code
 
