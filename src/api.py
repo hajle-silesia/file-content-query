@@ -29,7 +29,11 @@ def load_events():
         locale_timezone_timestamp = utc_timezone_aware_timestamp.astimezone()
         record = copy.deepcopy(event.value)
         record.update({'timestamp': locale_timezone_timestamp.isoformat()})
-        collection.insert_one(record)
+        collection.replace_one(
+            filter={'parameters.BATCH_NUMBER': record['parameters']['BATCH_NUMBER']},
+            replacement=record,
+            upsert=True,
+        )
 
 
 def get_latest_recipe():
